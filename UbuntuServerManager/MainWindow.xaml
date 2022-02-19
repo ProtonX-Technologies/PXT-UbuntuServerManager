@@ -1,0 +1,24 @@
+﻿<Window x:Class="UbuntuServerManager.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:UbuntuServerManager"
+        mc:Ignorable="d"
+        Title="PXT Ubuntu Server Manager" Height="450" Width="800">
+    <Grid Background="#FF191919">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="4*"/>
+        </Grid.ColumnDefinitions>
+        <Grid Background="#FF444444">
+            <Label Content="My Servers" VerticalAlignment="Top" Height="29" FontWeight="Bold" Background="#FF252525" BorderBrush="Black" Foreground="#FFF6F6F6"/>
+            <Button Content="Add Server" Click="Button_Click" Background="#FF282828" BorderBrush="Black" Height="20" VerticalAlignment="Bottom"/>
+            <StackPanel Margin="0,29,0,20" x:Name="StackPanel"/>
+
+        </Grid>
+
+
+
+    </Grid>
+</Window>
