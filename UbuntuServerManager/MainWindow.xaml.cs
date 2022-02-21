@@ -16,6 +16,7 @@ using System.Windows.Shapes;
 using System.Windows.Threading;
 using Microsoft.EntityFrameworkCore;
 using UbuntuServerManager.Data;
+using UbuntuServerManager.Handler;
 using UbuntuServerManager.Models;
 
 namespace UbuntuServerManager
@@ -28,9 +29,11 @@ namespace UbuntuServerManager
         private DataContext _context = new DataContext();
         private List<Server> _servers = new List<Server>();
         public ObservableCollection<Button> Buttons = new ObservableCollection<Button>();
+        public AppManager AppManager { get; set; }
 
         public MainWindow()
         {
+            AppManager=new AppManager();
             InitializeComponent();
             StackPanel.DataContext = Buttons;
             GetServers();
@@ -50,7 +53,7 @@ namespace UbuntuServerManager
             }
         }
 
-        private static Button GenerateServerButton(Server server)
+        private Button GenerateServerButton(Server server)
         {
             Button btn = new Button()
             {
@@ -58,7 +61,10 @@ namespace UbuntuServerManager
                 Margin = new Thickness(5, 10, 5, 25),
                 MinWidth = 30,
                 CommandParameter = server.Id,
-                
+            };
+            btn.Click += (sender, e) =>
+            {
+                ConnectToNewServer(server.Id);
             };
 
             return btn;
@@ -79,9 +85,27 @@ namespace UbuntuServerManager
 
 
         // connect to server
-        public void ConnectToNewServer()
+        public void ConnectToNewServer(int id)
         {
+            var serv = _servers.First(m => m.Id == id);
+            
+            // AppManager.Ssh = new SshHandler("", "", serv);
+            AppManager.Ssh.InitSshConnection();
 
+            SrvNameLbl.Content = serv.NetworkName;
+            SrvIpLbl.Content = serv.IPAddress;
+        }
+
+        // Send Console Command
+        private void Send_Click(object sender, RoutedEventArgs e)
+        {
+            string command = ConsoleEntry.Text;
+            ConsoleBox.Text += $"|{AppManager.Ssh.Server.NickName}> {command} \n";
+
+            var result = AppManager.Ssh.SendCommand(command);
+            ConsoleBox.Text += result + "\n";
+
+            ConsoleEntry.Text = "";
         }
 
         // Add Server Button Click
